@@ -17,7 +17,7 @@ class Link(models.Model):
     owenr = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='作者')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
-    class META():
+    class Meta():
         verbose_name = verbose_name_plural = '友链'
 
 
@@ -41,5 +41,5 @@ class SideBar(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='作者')
     created_tiem = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
-    class META():
+    class Meta():
         verbose_name = verbose_name_plural = '侧边栏'
