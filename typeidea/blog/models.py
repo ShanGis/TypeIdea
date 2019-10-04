@@ -55,8 +55,16 @@ class Post(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="作者")
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
+    # Model层定制字段
+    def status_show(self):
+        return '当前标状态:%s' % self.status
+    status_show.short_description = '演示状态'
+
     class Meta():
         verbose_name = verbose_name_plural = '文章'
+
+    def __str__(self):
+        return self.title
 
 
 
