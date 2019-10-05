@@ -14,3 +14,11 @@ class Comment(models.Model):
 
     class Meta():
         verbose_name = verbose_name_plural = '评论'
+
+    def __str__(self):
+        return '{}'.format(self.post.title)
+
+    def nickname_show(self):
+        return '来自{}的评论'.format(self.nickname)
+    nickname_show.short_description = '评论者'
+

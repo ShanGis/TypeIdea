@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .custom_site import custom_site
+from .custom_site import post_admin_site, comment_admin_site, config_admin_site
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('cus_admin/', custom_site.urls)
+    path('post_admin/', post_admin_site.urls),
+    path('comment_admin/', comment_admin_site.urls),
+    path('config_admin/', config_admin_site.urls)
 ]

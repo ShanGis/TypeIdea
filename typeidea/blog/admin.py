@@ -4,11 +4,12 @@ from django.utils.html import format_html
 
 from .models import Post, Category, Tag
 from .adminforms import PostAdminForm
-from typeidea.custom_site import custom_site
+from typeidea.custom_site import post_admin_site
 from typeidea.custom_admin import BaseOwnerAdmin
+from comment.admin import CommentInlineAdmin 
 
 
-@admin.register(Post, site=custom_site)
+@admin.register(Post, site=post_admin_site)
 class PostAdimn(BaseOwnerAdmin):
     form = PostAdminForm
     # 展示页面
@@ -41,12 +42,13 @@ class PostAdimn(BaseOwnerAdmin):
         'content',
         'tag',
     )
+    inlines = [CommentInlineAdmin]
 
     # Admin层自定义字段 
     def operate(self, obj):
         return format_html(
             "<a href='{}'>编辑</a>",
-            reverse('cus_admin:blog_post_change', args=(obj.id,))
+            reverse('post_admin:blog_post_change', args=(obj.id,))
         )
     operate.short_description = '操作'
 
@@ -56,7 +58,7 @@ class PostInLineAdimn(admin.TabularInline):
     extra = 3
     model = Post
 
-@admin.register(Category, site=custom_site)
+@admin.register(Category, site=post_admin_site)
 class CategoryAdmin(BaseOwnerAdmin):
     # inlines = [PostInLineAdimn]
     list_display = ['name', 'status', 'is_nav', 'created_time']
@@ -65,6 +67,6 @@ class CategoryAdmin(BaseOwnerAdmin):
     )
 
 
-@admin.register(Tag, site=custom_site)
+@admin.register(Tag, site=post_admin_site)
 class TagAdmin(BaseOwnerAdmin):
     list_display = ['name', 'status', 'created_time']
