@@ -19,7 +19,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     date_hierarchy = 'created_time'
 
-    # 定制编辑页面
+    # 编辑页面定制
     form = CommentAdminForms
     save_on_top = False
     save_on_bottom = True
