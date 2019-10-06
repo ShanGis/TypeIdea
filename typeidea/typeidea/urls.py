@@ -2,16 +2,15 @@ from django.contrib import admin
 from django.urls import path
 
 from .custom_site import post_admin_site, comment_admin_site, config_admin_site
-from blog.views import post_list, post_detail
+from blog.views import IndexView, CategoryView, TagView, PostView
 from config.views import links
 
 
 urlpatterns = [
-    path('', post_list, name='index'),
-    # path('post/', post_detail),
-    path('post/<int:pk>/', post_detail, name='detail'),
-    path('category/<int:category_id>/', post_list, name='category'),
-    path('tag/<int:tag_id>/', post_list, name='tag'),
+    path('', IndexView.as_view(), name='index'),
+    path('post/<int:pk>/', PostView.as_view(), name='detail'),
+    path('category/<int:category_id>/', CategoryView.as_view(), name='category'),
+    path('tag/<int:tag_id>/', TagView.as_view(), name='tag'),
     path('links/', links, name='links'),
     path('admin/', admin.site.urls),
     path('post_admin/', post_admin_site.urls),
