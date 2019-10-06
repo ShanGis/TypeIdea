@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse,Http404
 
 from .models import Post, Category, Tag
-
+from config.models import SideBar
+from comment.models import Comment
 
 def post_list(request, category_id=None, tag_id=None):
     queryset = Post.objects.all()
@@ -42,12 +43,21 @@ def post_list(request, category_id=None, tag_id=None):
         else:
             not_nav_cates.append(cate)
     
+    # 侧边栏
+    side_bars = SideBar.objects.filter(status=1)
+    recently_posts = Post.objects.filter(status=1)[:10]
+    recently_comments = Comment.objects.filter(status=1)[:10]
+
+
 
     # 模板内容
     context = {
         'posts': posts,
         'nav_cates': nav_cates,
         'not_nav_cates': not_nav_cates,
+        'side_bars': side_bars,
+        'recently_posts': recently_posts,
+        'recently_comments': recently_comments,
     }
     return render(request, 'blog/list.html', context=context)
 
