@@ -5,9 +5,7 @@ from config.models import SideBar
 from comment.models import Comment
 
 class CommonMixin(object):
-    def get_context_data(self):
-        # context = super().get_context_data()
-
+    def get_category_context(self):
         cates = Category.objects.filter(status=1)
         nav_cates = []
         not_nav_cates = []
@@ -16,7 +14,12 @@ class CommonMixin(object):
                 nav_cates.append(cate)
             else:
                 not_nav_cates.append(cate)
+        return {
+            'nav_cates': nav_cates,
+            'not_nav_cates': not_nav_cates,
+        }
 
+    def get_context_data(self, **kwargs):
         # 侧边栏
         side_bars = SideBar.objects.filter(status=1)
 
@@ -24,17 +27,14 @@ class CommonMixin(object):
         recently_comments = Comment.objects.filter(status=1)[:10]
 
         # 模板内容
-        extra_context = {
-            'nav_cates': nav_cates,
-            'not_nav_cates': not_nav_cates,
+        kwargs.update({
             'side_bars': side_bars,
             'recently_posts': recently_posts,
             'recently_comments': recently_comments,
-        }
-        # context.update(extra_context)
-        context = super().get_context_data(**extra_context)
-        return context 
-        # render(request, 'blog/list.html', context=context)
+        })
+        kwargs.update(self.get_category_context())
+        kwargs = super().get_context_data(**kwargs)
+        return kwargs 
 
 
 class BasesPostsView(CommonMixin, ListView):
@@ -45,7 +45,18 @@ class BasesPostsView(CommonMixin, ListView):
 
 
 class IndexView(BasesPostsView):
-    pass    
+    def get_queryset(self):
+        qs = super().get_queryset()
+        query = self.request.GET.get('query')
+        if not query:
+            return qs
+
+        return qs.filter(title__icontains=query)
+
+    def get_context_data(self, **kwargs):
+        query = self.request.GET.get('query')
+        return super().get_context_data(query=query)
+
 
 
 class CategoryView(BasesPostsView):
@@ -108,13 +119,13 @@ def post_list(request, category_id=None, tag_id=None):
 
     
 
-def post_detail(request, pk=None):
-    try:
-        queryset = Post.objects.get(pk=pk)
-    except Post.DoesNotExist:
-        raise Http404('好像没有你要找的文章呐')
+# def post_detail(request, pk=None):
+#     try:
+#         queryset = Post.objects.get(pk=pk)
+#     except Post.DoesNotExist:
+#         raise Http404('好像没有你要找的文章呐')
 
-    context = {
-        'post': queryset
-    }
-    return render(request, 'blog/detail.html', context=context)
+#     context = {
+#         'post': queryset
+#     }
+#     return render(request, 'blog/detail.html', context=context)
