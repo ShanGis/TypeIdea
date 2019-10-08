@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path
 
 from .custom_site import post_admin_site, comment_admin_site, config_admin_site
-from blog.views import IndexView, CategoryView, TagView, PostView
+from blog.views import (AuthorView, CategoryView, 
+                        IndexView, TagView, PostView)
 from config.views import links
 
 
@@ -11,6 +12,7 @@ urlpatterns = [
     path('post/<int:pk>/', PostView.as_view(), name='detail'),
     path('category/<int:category_id>/', CategoryView.as_view(), name='category'),
     path('tag/<int:tag_id>/', TagView.as_view(), name='tag'),
+    path('author/<int:author_id>/', AuthorView.as_view(), name='author'),
     path('links/', links, name='links'),
     path('admin/', admin.site.urls),
     path('post_admin/', post_admin_site.urls),

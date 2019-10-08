@@ -48,10 +48,9 @@ class IndexView(BasesPostsView):
     def get_queryset(self):
         qs = super().get_queryset()
         query = self.request.GET.get('query')
-        if not query:
-            return qs
-
-        return qs.filter(title__icontains=query)
+        if query:
+            qs = qs.filter(title__icontains=query)
+        return qs
 
     def get_context_data(self, **kwargs):
         query = self.request.GET.get('query')
@@ -71,12 +70,20 @@ class TagView(BasesPostsView):
     def get_queryset(self):
         tag_id = self.kwargs.get('tag_id')
         try:
-            tag = Tag.objects.filter(tag_id=tag_id)
+            tag = Tag.objects.get(id=tag_id)
         except Tag.DoesNotExist:
             return []
-        
+        import pdb;pdb.set_trace()
         posts = tag.posts.all()
         return posts
+
+
+class AuthorView(BasesPostsView):
+    def get_queryset(self):
+        author_id = self.kwargs.get('author_id')
+        if author_id:
+            qs = super().get_queryset().filter(owner_id=author_id)
+        return qs
 
 
 class PostView(CommonMixin, DetailView):
