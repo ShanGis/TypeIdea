@@ -11,11 +11,11 @@ from typeidea.custom_admin import BaseOwnerAdmin
 class CommentAdmin(admin.ModelAdmin):
     # 展示页面定制
     list_display = [
-        'post', 'content', 'nickname_show',
+        'target', 'content', 'nickname_show',
         'email', 'created_time', 'open_comment_website'
     ]
-    list_filter = ['nickname', 'post', 'created_time']
-    search_fields = ['nickname', 'post']
+    list_filter = ['nickname', 'target', 'created_time']
+    search_fields = ['nickname', 'target']
 
     date_hierarchy = 'created_time'
 
@@ -24,7 +24,7 @@ class CommentAdmin(admin.ModelAdmin):
     save_on_top = False
     save_on_bottom = True
     fields = (
-        ('post', 'nickname'),
+        ('target', 'nickname'),
         'email',
         'content', 'websit'
     )
@@ -38,7 +38,7 @@ class CommentAdmin(admin.ModelAdmin):
     open_comment_website.short_description = '评论页'
 
 
-class CommentInlineAdmin(admin.TabularInline):
-    fields = ('nickname','content')
-    extra = 1
-    model = Comment
+# class CommentInlineAdmin(admin.TabularInline):
+#     fields = ('nickname','content')
+#     extra = 1
+#     model = Comment

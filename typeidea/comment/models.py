@@ -10,7 +10,7 @@ class Comment(models.Model):
         (2,'删除'),
     )
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='文章')
+    target = models.CharField(max_length=200, null=True, verbose_name='评论目标')
     content = models.CharField(max_length=2000, verbose_name='内容')
     nickname = models.CharField(max_length=50, verbose_name='别名')
     status = models.PositiveIntegerField(default=1, choices=STATUS_ITEMS, verbose_name='状态')
@@ -22,7 +22,7 @@ class Comment(models.Model):
         verbose_name = verbose_name_plural = '评论'
 
     def __str__(self):
-        return '{}'.format(self.post.title)
+        return '{}'.format(self.target)
 
     def nickname_show(self):
         return '来自{}的评论'.format(self.nickname)

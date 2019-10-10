@@ -1,40 +1,10 @@
 from django.views.generic import ListView,DetailView
 
 from .models import Post, Category, Tag
-from config.models import SideBar
 from comment.models import Comment
-
-class CommonMixin(object):
-    def get_category_context(self):
-        cates = Category.objects.filter(status=1)
-        nav_cates = []
-        not_nav_cates = []
-        for cate in cates:
-            if cate.is_nav:
-                nav_cates.append(cate)
-            else:
-                not_nav_cates.append(cate)
-        return {
-            'nav_cates': nav_cates,
-            'not_nav_cates': not_nav_cates,
-        }
-
-    def get_context_data(self, **kwargs):
-        # 侧边栏
-        side_bars = SideBar.objects.filter(status=1)
-
-        recently_posts = Post.objects.filter(status=1)[:10]
-        recently_comments = Comment.objects.filter(status=1)[:10]
-
-        # 模板内容
-        kwargs.update({
-            'side_bars': side_bars,
-            'recently_posts': recently_posts,
-            'recently_comments': recently_comments,
-        })
-        kwargs.update(self.get_category_context())
-        kwargs = super().get_context_data(**kwargs)
-        return kwargs 
+from comment.forms import CommentForms
+from config.models import SideBar
+from typeidea.common import CommonMixin,CommentMixIn
 
 
 class BasesPostsView(CommonMixin, ListView):
@@ -73,7 +43,6 @@ class TagView(BasesPostsView):
             tag = Tag.objects.get(id=tag_id)
         except Tag.DoesNotExist:
             return []
-        import pdb;pdb.set_trace()
         posts = tag.posts.all()
         return posts
 
@@ -86,11 +55,12 @@ class AuthorView(BasesPostsView):
         return qs
 
 
-class PostView(CommonMixin, DetailView):
+class PostView(CommonMixin, CommentMixIn, DetailView):
     model = Post
     template_name = 'blog/detail.html'
     context_object_name = 'post'
 
+    
 '''
 def post_list(request, category_id=None, tag_id=None):
     queryset = Post.objects.all()

@@ -6,7 +6,7 @@ from .models import Post, Category, Tag
 from .adminforms import PostAdminForm
 from typeidea.custom_site import post_admin_site
 from typeidea.custom_admin import BaseOwnerAdmin
-from comment.admin import CommentInlineAdmin 
+# from comment.admin import CommentInlineAdmin 
 
 
 @admin.register(Post, site=post_admin_site)
@@ -42,7 +42,7 @@ class PostAdimn(BaseOwnerAdmin):
         'content',
         'tag',
     )
-    inlines = [CommentInlineAdmin]
+    # inlines = [CommentInlineAdmin]
 
     # Admin层自定义字段 
     def operate(self, obj):
