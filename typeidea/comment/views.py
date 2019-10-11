@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
 from .models import Comment
@@ -18,6 +19,7 @@ class CommentView(TemplateView):
             instance.target = target
             instance.save()
             succeed = True
+            return redirect(target)
         else:
             succeed = False
         
