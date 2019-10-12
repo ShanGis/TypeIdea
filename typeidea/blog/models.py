@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+import markdown
 
 class Category(models.Model):
     STATUS_ITEMS = (
@@ -50,6 +51,8 @@ class Post(models.Model):
     dec = models.CharField(max_length=1024, blank=True, verbose_name="摘要")
     status = models.PositiveIntegerField(default=1, choices=STATUS_ITEMS, verbose_name="状态")
     content = models.TextField(verbose_name="内容", help_text="正文必须为MarkDown格式")
+    is_markdown = models.BooleanField(verbose_name='使用MarkDown格式', default=True)
+    html = models.TextField(verbose_name='内容HTML格式', null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="分类")
     tag = models.ManyToManyField(Tag, related_name='posts' ,verbose_name="标签")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="作者")
@@ -59,6 +62,17 @@ class Post(models.Model):
     def status_show(self):
         return '当前标状态:%s' % self.status
     status_show.short_description = '演示状态'
+
+    def save(self, *args, **kwargs):
+        if self.is_markdown:
+            config = {
+            'codehilite': {
+                'use_pygments': False,
+                'css_class': 'prettyprint linenums',
+                }
+            }
+            self.html = markdown.markdown(self.content, extensions=['codehilite'], extension_configs=config)
+        return super().save(*args, **kwargs)
 
     class Meta():
         verbose_name = verbose_name_plural = '文章'

@@ -39,7 +39,8 @@ class PostAdimn(BaseOwnerAdmin):
         ('title', 'category'),
         'dec',
         'status',
-        'content',
+        ('content', 'is_markdown'),
+        'html',
         'tag',
     )
     # inlines = [CommentInlineAdmin]
