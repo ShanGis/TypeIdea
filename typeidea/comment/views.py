@@ -6,7 +6,7 @@ from .forms import CommentForms
 
 class CommentView(TemplateView):
     template_name = 'comment/result.html'
-    http_method_names = ['POST']
+    http_method_names = ['post']
     
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -26,6 +26,7 @@ class CommentView(TemplateView):
         
         context = {
             'succeed': succeed,
-            'form': form
+            'form': form,
+            'target': target
         }
         return self.render_to_response(context)

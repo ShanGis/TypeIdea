@@ -129,3 +129,10 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'D:/DjangoProject/TypeIdea/typeidea',
+    }
+}
+

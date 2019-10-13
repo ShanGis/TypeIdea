@@ -54,19 +54,25 @@
                         <div class="sidebar-title">{{ side.title }}</div>
                         <div class="sidebar-content">
                             {% if side.display_type == 1 %}
-                            {% autoescape off %}
-                            {{ side.content }}
-                            {% endautoescape %}
+                                {% autoescape off %}
+                                    {{ side.content }}
+                                {% endautoescape %}
                             {% elif side.display_type == 2 %}
                             <ul>
                                 {% for post in recently_posts %}
-                                <li><a href="{% url 'detail' post.id %}">{{ post.title }}</a></li>
+                                    <li><a href="{% url 'detail' post.id %}">{{ post.title }}</a></li>
                                 {% endfor %}
+                            </ul>
+                            {% elif side.display_type == 3 %}
+                            <ul>
+                                {% for post in hot_posts %}
+                                    <li><a href="{% url 'detail' post.id%}">{{ post.title}}</a></li>
+                                {% endfor%}
                             </ul>
                             {% elif side.display_type == 4 %}
                             <ul>
                                 {% for comment in recently_comments %}
-                                <li>{{ comment.content }}</li>
+                                    <li>{{ comment.content }}</li>
                                 {% endfor %}
                             </ul>
                             {% endif %}
@@ -93,3 +99,5 @@
         {% block javascript %}
         {% endblock %}
     </div>
+</body>
+</html>

@@ -14,7 +14,7 @@ class PostAdimn(BaseOwnerAdmin):
     form = PostAdminForm
     # 展示页面
     list_display = (
-        'title', 'category', 'owner', 
+        'title', 'category', 'owner', 'pv', 'uv',
         'created_time', 'status_show', 'operate',
     )
     # list_display_links = (

@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.views.generic import ListView,DetailView
 
 from .models import Post, Category, Tag
@@ -60,49 +61,24 @@ class PostView(CommonMixin, CommentMixIn, DetailView):
     template_name = 'blog/detail.html'
     context_object_name = 'post'
 
-    
-'''
-def post_list(request, category_id=None, tag_id=None):
-    queryset = Post.objects.all()
-    
-    # 分类、标签视图
-    if category_id:
-        queryset = queryset.filter(category_id=category_id)
-    elif tag_id:
-        try:
-            tag = Tag.objects.get(id=tag_id)
-        except tag.DoesNotExist:
-            queryset = []
-        else:
-            queryset = tag.posts.all()
-    
-    # 分页
-    page = request.GET.get('page', 1)
-    page_size = 4
-    try:
-        page = int(page)
-    except TypeError:
-        page = 1
-    paginator = Paginator(queryset, page_size)
-    try:
-        posts = paginator.page(page)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
-    
-    '''
- 
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        # import pdb; pdb.set_trace()
+        self.pv_uv()
+        return response
 
+    def pv_uv(self):
+        sessionid = self.request.COOKIES.get('sessionid')
+        if not sessionid:
+            return
+        path = self.request.path
+        pv_key = 'pv:{0}{1}'.format(sessionid, path)
+        uv_key = 'uv:{0}{1}'.format(sessionid, path)
+        if not cache.get(pv_key):
+            self.object.increase_pv()
+            cache.set(pv_key, 1, 30)
     
-
+        if not cache.get(uv_key):
+            self.object.increase_uv()
+            cache.set(uv_key, 1, 60 * 60 *24)
     
-
-# def post_detail(request, pk=None):
-#     try:
-#         queryset = Post.objects.get(pk=pk)
-#     except Post.DoesNotExist:
-#         raise Http404('好像没有你要找的文章呐')
-
-#     context = {
-#         'post': queryset
-#     }
-#     return render(request, 'blog/detail.html', context=context)

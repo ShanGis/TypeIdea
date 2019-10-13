@@ -23,6 +23,7 @@ class CommonMixin(object):
         side_bars = SideBar.objects.filter(status=1)
 
         recently_posts = Post.objects.filter(status=1)[:10]
+        hot_posts = Post.objects.filter(status=1).order_by('pv')[:10]
         recently_comments = Comment.objects.filter(status=1)[:10]
 
         # 模板内容
@@ -30,6 +31,7 @@ class CommonMixin(object):
             'side_bars': side_bars,
             'recently_posts': recently_posts,
             'recently_comments': recently_comments,
+            'hot_posts':hot_posts
         })
         kwargs.update(self.get_category_context())
         kwargs = super().get_context_data(**kwargs)

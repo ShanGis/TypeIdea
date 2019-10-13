@@ -23,7 +23,7 @@
 
 <div class="post-element">
     <h3 class="post-element-title">
-        {{ post.title }}
+        {{ post.title }} - {{ post.pv }} - {{ post.uv }}
     </h3>
     <div>
         <nav class="nav">
@@ -50,7 +50,7 @@
 
 {% block javascript %}
     <!-- <script type="text/javascript" src="{% static 'JS/prettify.js' %}"></script> -->
-    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=css&amp;skin=desert"></script>
     <script>
         window.onload = function(){
             PR.prettyPrint();

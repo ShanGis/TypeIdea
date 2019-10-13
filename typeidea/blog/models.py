@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import F
 
 import markdown
 
@@ -57,11 +58,19 @@ class Post(models.Model):
     tag = models.ManyToManyField(Tag, related_name='posts' ,verbose_name="标签")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="作者")
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    pv = models.PositiveIntegerField(default=0, verbose_name='PV')
+    uv = models.PositiveIntegerField(default=0, verbose_name='UV')
 
     # Model层定制字段
     def status_show(self):
         return '当前标状态:%s' % self.status
     status_show.short_description = '演示状态'
+
+    def increase_pv(self):
+        return type(self).objects.filter(id=self.id).update(pv=F('pv') + 1)
+
+    def increase_uv(self):
+        return type(self).objects.filter(id=self.id).update(uv=F('uv') + 1)
 
     def save(self, *args, **kwargs):
         if self.is_markdown:
