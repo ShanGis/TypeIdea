@@ -5,6 +5,7 @@ xversion.register_models()
 from django.contrib import admin
 from django.urls import path
 
+from .autcomplete import CategoryAutoComplete,TagAutoComplete
 from blog.views import (AuthorView, CategoryView, 
                         IndexView, TagView, PostView)
 from config.views import LinkView
@@ -20,5 +21,7 @@ urlpatterns = [
     path('author/<int:author_id>/', AuthorView.as_view(), name='author'),
     path('links/', LinkView.as_view(), name='links'),
     path('comments/', CommentView.as_view(), name='comments'),
+    path('category-autocomplete/', CategoryAutoComplete.as_view(), name='category-autocomplete'),
+    path('tag-autocomplete/', TagAutoComplete.as_view(), name='tag-autocomplete'),
     path('admin/', xadmin.site.urls),
 ]
