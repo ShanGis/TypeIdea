@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
+import xadmin
 
 from .models import Link, SideBar
 from config.adminform import ConfigLinkAdminForm, ConfigSideBarAdminForm
-from typeidea.custom_admin import BaseOwnerAdmin
-from typeidea.custom_site import config_admin_site
+from typeidea.adminx import BaseOwnerAdmin
 
 
-@admin.register(Link, site=config_admin_site)
 class LinkAdmin(BaseOwnerAdmin):
     # 展示页面定制
     list_display = [
@@ -33,9 +32,9 @@ class LinkAdmin(BaseOwnerAdmin):
             reverse('config_admin:config_link_change', args=(obj.id,))
         )
     goahead_link.short_description = '链接'
+xadmin.site.register(Link, LinkAdmin)
 
 
-@admin.register(SideBar, site=config_admin_site)
 class SideBarAdmin(BaseOwnerAdmin):
     # 展示页面定制
     list_display = [
@@ -54,3 +53,4 @@ class SideBarAdmin(BaseOwnerAdmin):
     fields = (
         'title', 'display_type', 'content', 'status'
     )
+xadmin.site.register(SideBar, SideBarAdmin)

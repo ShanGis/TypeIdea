@@ -1,15 +1,13 @@
+import xadmin
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-
+from xadmin.layout import Fieldset,Row
 from .models import Post, Category, Tag
 from .adminforms import PostAdminForm
-from typeidea.custom_site import post_admin_site
-from typeidea.custom_admin import BaseOwnerAdmin
-# from comment.admin import CommentInlineAdmin 
+from typeidea.adminx import BaseOwnerAdmin
 
 
-@admin.register(Post, site=post_admin_site)
 class PostAdimn(BaseOwnerAdmin):
     form = PostAdminForm
     # 展示页面
@@ -21,7 +19,7 @@ class PostAdimn(BaseOwnerAdmin):
     #     # 'category',
     #     'title',
     # )
-
+    exclude = ('html', 'pv', 'uv', 'owner')
     list_filter = ['category', 'owner']
     # search_fields = ['title', 'category__name', 'status', 'owner__username']
     search_fields = ['title', 'category__name']
@@ -35,13 +33,15 @@ class PostAdimn(BaseOwnerAdmin):
 
     # 编辑页面
     save_on_top = False 
-    fields = (
-        ('title', 'category'),
-        'dec',
-        'status',
-        ('content', 'is_markdown'),
-        'html',
-        'tag',
+    form_layout = (
+        Fieldset(
+            '基础信息',
+            'title',
+            'dec',
+            Row('category', 'status', 'is_markdown',),
+            'content',
+            'tag',
+        ),
     )
     # inlines = [CommentInlineAdmin]
 
@@ -53,21 +53,22 @@ class PostAdimn(BaseOwnerAdmin):
         )
     operate.short_description = '操作'
 
+xadmin.site.register(Post, PostAdimn)
 
-class PostInLineAdimn(admin.TabularInline):
-    fields = ('title', 'status')
-    extra = 3
-    model = Post
+# class PostInLineAdimn(admin.TabularInline):
+#     fields = ('title', 'status')
+#     extra = 3
+#     model = Post
 
-@admin.register(Category, site=post_admin_site)
 class CategoryAdmin(BaseOwnerAdmin):
     # inlines = [PostInLineAdimn]
     list_display = ['name', 'status', 'is_nav', 'created_time']
     fields = (
         'name', 'status', 'is_nav',
     )
+xadmin.site.register(Category, CategoryAdmin)
 
 
-@admin.register(Tag, site=post_admin_site)
 class TagAdmin(BaseOwnerAdmin):
     list_display = ['name', 'status', 'created_time']
+xadmin.site.register(Tag, TagAdmin)

@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
+import xadmin
 
 from .models import Comment
 from .adminform import CommentAdminForms
-from typeidea.custom_site import comment_admin_site
-from typeidea.custom_admin import BaseOwnerAdmin
+from typeidea.adminx import BaseOwnerAdmin
 
-@admin.register(Comment, site=comment_admin_site)
-class CommentAdmin(admin.ModelAdmin):
+
+class CommentAdmin(object):
     # 展示页面定制
     list_display = [
         'target', 'content', 'nickname_show',
@@ -24,9 +24,11 @@ class CommentAdmin(admin.ModelAdmin):
     save_on_top = False
     save_on_bottom = True
     fields = (
-        ('target', 'nickname'),
+        'target',
+        'nickname',
         'email',
-        'content', 'websit'
+        'content', 
+        'websit'
     )
     
 
@@ -37,6 +39,7 @@ class CommentAdmin(admin.ModelAdmin):
             )
     open_comment_website.short_description = '评论页'
 
+xadmin.site.register(Comment, CommentAdmin)
 
 # class CommentInlineAdmin(admin.TabularInline):
 #     fields = ('nickname','content')
