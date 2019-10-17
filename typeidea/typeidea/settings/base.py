@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
 
+    'rest_framework',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -159,3 +161,8 @@ CKEDITOR_UPLOAD_PATH = "article_images"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 DEFAULT_FILE_STORAGE = 'typeidea.storage.MyStorage'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 
+    'rest_framework.schemas.AutoSchema',
+                  }

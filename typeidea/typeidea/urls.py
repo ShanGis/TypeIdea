@@ -8,17 +8,22 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path
+from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
 
 from blog.views import (
     AuthorView, CategoryView, 
     IndexView, TagView, PostView
                         )
-
 from config.views import LinkView
 from comment.views import CommentView
 from typeidea import adminx
+from blog.api import PostViewSet, CategoryViewSet
 from .autcomplete import CategoryAutoComplete,TagAutoComplete
 
+router = routers.DefaultRouter()
+router.register(r'post', PostViewSet)
+router.register(r'category', CategoryViewSet)
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -32,4 +37,6 @@ urlpatterns = [
     path('category-autocomplete/', CategoryAutoComplete.as_view(), name='category-autocomplete'),
     path('tag-autocomplete/', TagAutoComplete.as_view(), name='tag-autocomplete'),
     url('ckeditor/', include('ckeditor_uploader.urls')),
-] + uploader_urls.urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^api/', include(router.urls)),
+    url(r'^docs/', include_docs_urls(title='typeidea apis'))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
