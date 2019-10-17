@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
 
+    'ckeditor',
+    'ckeditor_uploader',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,3 +146,16 @@ CACHES = {
     }
 }
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 600,
+        'tabSpaces': 4,
+    },
+}
+CKEDITOR_RESTRICT_BY_USER = True
+CKEDITOR_UPLOAD_PATH = "article_images"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+DEFAULT_FILE_STORAGE = 'typeidea.storage.MyStorage'

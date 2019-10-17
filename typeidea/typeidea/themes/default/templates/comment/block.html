@@ -1,7 +1,7 @@
 <hr />
 <form action="/comments/" class="form-group" method="POST">
     {% csrf_token %}
-        <input name="target" value="{{ request.path }}">
+        <input name="target" type='hidden' value="{{ request.path }}">
             {{ comment_form }}
         <input type="submit" value="提交">
 </form>

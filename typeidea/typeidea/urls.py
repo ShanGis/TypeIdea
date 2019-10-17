@@ -2,15 +2,22 @@ import xadmin
 xadmin.autodiscover()
 from xadmin.plugins import xversion
 xversion.register_models() 
+from ckeditor_uploader import urls as uploader_urls
 from django.contrib import admin
+from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.conf import settings
 from django.urls import path
 
-from .autcomplete import CategoryAutoComplete,TagAutoComplete
-from blog.views import (AuthorView, CategoryView, 
-                        IndexView, TagView, PostView)
+from blog.views import (
+    AuthorView, CategoryView, 
+    IndexView, TagView, PostView
+                        )
+
 from config.views import LinkView
 from comment.views import CommentView
 from typeidea import adminx
+from .autcomplete import CategoryAutoComplete,TagAutoComplete
 
 
 urlpatterns = [
@@ -21,7 +28,8 @@ urlpatterns = [
     path('author/<int:author_id>/', AuthorView.as_view(), name='author'),
     path('links/', LinkView.as_view(), name='links'),
     path('comments/', CommentView.as_view(), name='comments'),
+    path('admin/', xadmin.site.urls),
     path('category-autocomplete/', CategoryAutoComplete.as_view(), name='category-autocomplete'),
     path('tag-autocomplete/', TagAutoComplete.as_view(), name='tag-autocomplete'),
-    path('admin/', xadmin.site.urls),
-]
+    url('ckeditor/', include('ckeditor_uploader.urls')),
+] + uploader_urls.urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
