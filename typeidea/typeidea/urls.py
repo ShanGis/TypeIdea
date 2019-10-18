@@ -11,6 +11,9 @@ from django.urls import path
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
+from blog.api import (
+    CategoryViewSet, TagViewSet, PostViewSet, UserViewSet,
+    )
 from blog.views import (
     AuthorView, CategoryView, 
     IndexView, TagView, PostView
@@ -18,12 +21,13 @@ from blog.views import (
 from config.views import LinkView
 from comment.views import CommentView
 from typeidea import adminx
-from blog.api import PostViewSet, CategoryViewSet
 from .autcomplete import CategoryAutoComplete,TagAutoComplete
 
 router = routers.DefaultRouter()
 router.register(r'post', PostViewSet)
 router.register(r'category', CategoryViewSet)
+router.register(r'tag', TagViewSet)
+router.register(r'user', UserViewSet)
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
