@@ -1,9 +1,12 @@
+from silk.profiling.profiler import silk_profile
+
 from blog.models import Post,Category,Tag
 from comment.models import Comment
 from comment.forms import CommentForms
 from config.models import SideBar
 
 class CommonMixin(object):
+    # @silk_profile(name='get_category_context')
     def get_category_context(self):
         cates = Category.objects.filter(status=1)
         nav_cates = []

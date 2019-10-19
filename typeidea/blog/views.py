@@ -16,13 +16,14 @@ class BasesPostsView(CommonMixin, ListView):
 
 
 class IndexView(BasesPostsView):
+    
     def get_queryset(self):
         qs = super().get_queryset()
         query = self.request.GET.get('query')
         if query:
             qs = qs.filter(title__icontains=query)
         return qs
-
+    
     def get_context_data(self, **kwargs):
         query = self.request.GET.get('query')
         return super().get_context_data(query=query)
