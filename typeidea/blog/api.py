@@ -1,7 +1,11 @@
+import logging
+
 from django.contrib.auth.models import User
 from rest_framework import serializers, viewsets, pagination
 
 from .models import Post, Category, Tag
+
+logger = logging.getLogger(__name__)
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,8 +28,10 @@ class PostViewSet(viewsets.ModelViewSet):
         def get_queryset(self):
             qs = super().get_queryset()
             category_id = self.request.GET.get('category')
+            logger.info(category_id)
             if category_id:
                 qs = qs.filter(category_id=category_id)
+            logger.info(qs)
             return qs
 
         def retrieve(self, request, *args, **kwargs):
