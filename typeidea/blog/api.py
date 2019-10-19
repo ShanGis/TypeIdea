@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, viewsets, pagination
 
 from .models import Post, Category, Tag
 
@@ -9,20 +9,11 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         slug_field='name',
     )
-    tag = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='name',
-    )
-    owner = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='username'
-    )
-
+    created_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta():
         model = Post
         fields = (
-        'url', 'title', 'dec',  'category', 'created_time', 'owner', 'pv', 'tag'
+        'url', 'title', 'dec', 'category', 'created_time', 'pv', 
         )
 
 
@@ -30,8 +21,21 @@ class PostViewSet(viewsets.ModelViewSet):
         queryset = Post.objects.all()
         serializer_class = PostSerializer
 
+        def get_queryset(self):
+            qs = super().get_queryset()
+            category_id = self.request.GET.get('category')
+            if category_id:
+                qs = qs.filter(category_id=category_id)
+            return qs
+
+        def retrieve(self, request, *args, **kwargs):
+            self.serializer_class = PostDetailSerializer
+            return super().retrieve(request, *args, **kwargs)
+
 
 class CategorySerializer(serializers.ModelSerializer):
+    created_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
     class Meta():
         model = Category
         fields = (
@@ -60,6 +64,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    created_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
     class Meta():
         model = Tag
         fields = (
@@ -68,10 +74,21 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class TagDetailSerializer(serializers.ModelSerializer):
-    posts = PostSerializer(
-        many=True,
-        read_only=True,
-    )
+    posts = serializers.SerializerMethodField('paginated_posts')
+
+    def paginated_posts(self, obj):
+        posts = obj.posts.all()
+        paginator = pagination.PageNumberPagination()
+        pag = paginator.paginate_queryset(posts, self.context['request'])
+        serializer = PostSerializer(pag, many=True, context={'request': self.context['request']})
+        return {
+            'count': posts.count(),
+            'result': serializer.data,
+            'previous': paginator.get_previous_link(),
+            'next': paginator.get_next_link(),
+        }
+
+
     class Meta():
         model = Tag
         fields = (
@@ -114,3 +131,26 @@ class UserViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = UesrDeatilSerializer
         return super().retrieve(request, *args, **kwargs)
+
+
+class PostDetailSerializer(serializers.HyperlinkedModelSerializer):
+    tag = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name',
+    )
+    owner = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+    
+    tag = TagSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    class Meta():
+        model = Post
+        fields = (
+        'url', 'owner', 'title', 'dec', 'category', 'tag', 'created_time', 'pv', 
+        )
