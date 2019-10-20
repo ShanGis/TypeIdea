@@ -1,5 +1,4 @@
-from silk.profiling.profiler import silk_profile
-
+# from silk.profiling.profiler import silk_profile
 from blog.models import Post,Category,Tag
 from comment.models import Comment
 from comment.forms import CommentForms

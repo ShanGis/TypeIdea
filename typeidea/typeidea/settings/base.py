@@ -118,6 +118,7 @@ USE_TZ = True
 THEME = 'themes/default'
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '../static_files'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, THEME, 'statics')
@@ -140,13 +141,6 @@ TEMPLATES = [
         },
     },
 ]
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': 'D:/DjangoProject/TypeIdea/typeidea',
-    }
-}
 
 CKEDITOR_CONFIGS = {
     'default': {

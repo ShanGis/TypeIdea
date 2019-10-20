@@ -15,21 +15,14 @@ class PostAdimn(BaseOwnerAdmin):
         'title', 'category', 'owner', 'pv', 'uv',
         'created_time', 'status_show', 'operate',
     )
-    # list_display_links = (
-    #     # 'category',
-    #     'title',
-    # )
     exclude = ('html', 'pv', 'uv', 'owner')
     list_filter = ['category', 'owner']
-    # search_fields = ['title', 'category__name', 'status', 'owner__username']
     search_fields = ['title', 'category__name']
-    # show_full_result_count = False
 
     actions_on_top = False
     actions_on_bottom = True
 
     date_hierarchy = 'created_time'
-    # list_editable = ('category',)
 
     # 编辑页面
     save_on_top = False 
@@ -43,8 +36,7 @@ class PostAdimn(BaseOwnerAdmin):
             'tag',
         ),
     )
-    # inlines = [CommentInlineAdmin]
-
+    
     # Admin层自定义字段 
     def operate(self, obj):
         return format_html(
@@ -52,13 +44,8 @@ class PostAdimn(BaseOwnerAdmin):
             reverse('post_admin:blog_post_change', args=(obj.id,))
         )
     operate.short_description = '操作'
-
 xadmin.site.register(Post, PostAdimn)
 
-# class PostInLineAdimn(admin.TabularInline):
-#     fields = ('title', 'status')
-#     extra = 3
-#     model = Post
 
 class CategoryAdmin(BaseOwnerAdmin):
     # inlines = [PostInLineAdimn]

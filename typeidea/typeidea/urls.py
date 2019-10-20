@@ -1,3 +1,5 @@
+import re
+
 import xadmin
 xadmin.autodiscover()
 from xadmin.plugins import xversion
@@ -5,7 +7,7 @@ xversion.register_models()
 from ckeditor_uploader import urls as uploader_urls
 from django.contrib import admin
 from django.conf.urls import url, include
-from django.conf.urls.static import static
+from django.views.static import serve
 from django.conf import settings
 from django.urls import path
 from rest_framework import routers
@@ -21,13 +23,19 @@ from blog.views import (
 from config.views import LinkView
 from comment.views import CommentView
 from typeidea import adminx
-from .autcomplete import CategoryAutoComplete,TagAutoComplete
+from .autocomplete import CategoryAutocomplete, TagAutocomplete
 
 router = routers.DefaultRouter()
 router.register(r'post', PostViewSet)
 router.register(r'category', CategoryViewSet)
 router.register(r'tag', TagViewSet)
 router.register(r'user', UserViewSet)
+
+
+def static(prefix, **kwargs):
+    return [
+        url(r'^%s(?P<path>.*)$' % re.escape(prefix.lstrip('/')), serve, kwargs=kwargs),
+     ]
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -38,16 +46,19 @@ urlpatterns = [
     path('links/', LinkView.as_view(), name='links'),
     path('comments/', CommentView.as_view(), name='comments'),
     path('admin/', xadmin.site.urls),
-    path('category-autocomplete/', CategoryAutoComplete.as_view(), name='category-autocomplete'),
-    path('tag-autocomplete/', TagAutoComplete.as_view(), name='tag-autocomplete'),
+    url(r'^category-autocomplete/$', CategoryAutocomplete.as_view(), name='category-autocomplete'),
+    url(r'^tag-autocomplete/$', TagAutocomplete.as_view(), name='tag-autocomplete'), 
+    # path('category-autocomplete/', CategoryAutoComplete.as_view(),
+    #      name='category-autocomplete'),
+    # path('tag-autocomplete/', TagAutoComplete.as_view(), name='tag-autocomplete'),
     url('ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^api/', include(router.urls)),
     url(r'^docs/', include_docs_urls(title='typeidea apis'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-        url(r'^silk/', include('silk.urls', namespace='silk')),
+        # url(r'^silk/', include('silk.urls', namespace='silk')),
                    ] + urlpatterns

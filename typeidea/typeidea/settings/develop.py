@@ -4,15 +4,16 @@ DEBUG = True
 
 INSTALLED_APPS += [
     'debug_toolbar',
-    # 'silk',
+    'silk',
 ]
 
 MIDDLEWARE += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # 'silk.middleware.SilkyMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
+SILKY_PYTHON_PROFILER = True
 
 
 # Database
@@ -56,4 +57,11 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'D:/DjangoProject/TypeIdea/typeidea',
+    }
 }
