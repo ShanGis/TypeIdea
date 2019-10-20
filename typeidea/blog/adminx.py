@@ -51,7 +51,7 @@ class CategoryAdmin(BaseOwnerAdmin):
     # inlines = [PostInLineAdimn]
     list_display = ['name', 'status', 'is_nav', 'created_time']
     fields = (
-        'name', 'status', 'is_nav',
+        'name', 'is_nav', 'status', 
     )
 xadmin.site.register(Category, CategoryAdmin)
 

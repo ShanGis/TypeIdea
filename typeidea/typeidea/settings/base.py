@@ -36,12 +36,14 @@ INSTALLED_APPS = [
     'comment',
     'typeidea',
 
+    'dal',
+    'dal_select2',
+
     'xadmin',
     'crispy_forms',
     'reversion',
 
-    'dal',
-    'dal_select2',
+   
 
     'ckeditor',
     'ckeditor_uploader',
