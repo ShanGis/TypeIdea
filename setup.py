@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 
 packages = find_packages('typeidea')
+print(packages)
 
 setup(
     name='typeidea',
@@ -13,5 +14,5 @@ setup(
     package_dir={'': 'typeidea'},
     include_package_data=True,
     install_requires=['django==2.2.5'],
-    scripts='typeidea/manage.py'
+    scripts='typeidea/manage.py',
 )
